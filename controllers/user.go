@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"goMux/config"
 	"goMux/models"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -36,16 +35,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "Application/json")
 
 	var user models.User
-	params := mux.Vars(r)
 
-	if config.DB.First(&user, params["email"]) != nil {
-		log.Println("User already exists")
-	} else {
-		json.NewDecoder(r.Body).Decode(&user)
+	json.NewDecoder(r.Body).Decode(&user)
 
-		config.DB.Create(&user)
-		json.NewEncoder(w).Encode(user)
-	}
+	config.DB.Create(&user)
+	json.NewEncoder(w).Encode(user)
 
 }
 
